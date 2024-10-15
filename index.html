@@ -1,21 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel and Tourism</title>
+    <title>Travel and Tourism Booking</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <h1>Welcome to Travel and Tourism</h1>
         <h2>Book Your Adventure!</h2>
-        <form id="booking-form">
-            <input type="text" id="hotel-name" placeholder="Hotel Name" required>
-            <button type="submit">Book Hotel</button>
-        </form>
-        <div id="response"></div>
+
+        <!-- Section for Hotel Booking -->
+        <section class="booking-section">
+            <h3>Hotel Booking</h3>
+            <form id="hotel-booking-form">
+                <input type="text" id="hotel-name" placeholder="Hotel Name" required>
+                <input type="date" id="hotel-checkin" placeholder="Check-in Date" required>
+                <input type="date" id="hotel-checkout" placeholder="Check-out Date" required>
+                <button type="submit">Book Hotel</button>
+            </form>
+            <div id="hotel-response"></div>
+        </section>
+
+        <!-- Section for Flight Booking -->
+        <section class="booking-section">
+            <h3>Flight Booking</h3>
+            <form id="flight-booking-form">
+                <input type="text" id="flight-number" placeholder="Flight Number" required>
+                <input type="text" id="flight-destination" placeholder="Destination" required>
+                <input type="date" id="flight-date" placeholder="Travel Date" required>
+                <button type="submit">Book Flight</button>
+            </form>
+            <div id="flight-response"></div>
+        </section>
+
+        <!-- Section for Car Rental Booking -->
+        <section class="booking-section">
+            <h3>Car Rental</h3>
+            <form id="car-booking-form">
+                <input type="text" id="car-model" placeholder="Car Model" required>
+                <input type="number" id="car-rental-days" placeholder="Number of Days" required>
+                <button type="submit">Book Car</button>
+            </form>
+            <div id="car-response"></div>
+        </section>
+
     </div>
+
+    <!-- Link to the external JavaScript file -->
     <script src="scripts.js"></script>
 </body>
+
 </html>
