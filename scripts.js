@@ -1,61 +1,64 @@
-// Function to handle form submissions
-async function handleFormSubmission(formId, endpoint, responseDivId, payload) {
+// Handle the destination form submission
+document.getElementById('destination-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const destination = document.getElementById('destination').value;
+    const travelDate = document.getElementById('travel-date').value;
+
     try {
-        const response = await fetch(endpoint, {
+        const response = await fetch('/api/get-destination-insights', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ destination, travelDate }),
         });
 
-        const result = await response.json();
-        document.getElementById(responseDivId).innerText = result.message;
+        const data = await response.json();
+        displayDestinationInsights(data);
     } catch (error) {
-        document.getElementById(responseDivId).innerText = 'Error: ' + error.message;
+        console.error('Error fetching AI data:', error);
+        document.getElementById('destination-response').innerText = 'Error fetching data.';
     }
+});
+
+// Function to display AI-generated travel insights and render the chart
+function displayDestinationInsights(data) {
+    const responseDiv = document.getElementById('destination-response');
+
+    // Display events, weather, and other details
+    responseDiv.innerHTML = `
+        <h4>Events in ${data.destination}</h4>
+        <ul>
+            ${data.events.map(event => `<li>${event.name} on ${event.date}</li>`).join('')}
+        </ul>
+        <h4>Weather Forecast: ${data.weather}</h4>
+        <h4>Total Estimated Expenditure: $${data.totalExpenditure}</h4>
+    `;
+
+    // Generate the expenditure chart
+    const ctx = document.getElementById('expenditureChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Flights', 'Hotels', 'Car Rental', 'Daily Expenses'],
+            datasets: [{
+                label: 'Cost in USD',
+                data: [
+                    data.expenditures.flights,
+                    data.expenditures.hotels,
+                    data.expenditures.cars,
+                    data.expenditures.dailyExpenses
+                ],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
-
-// Hotel Booking Submission
-document.getElementById('hotel-booking-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const hotelName = document.getElementById('hotel-name').value;
-    const checkin = document.getElementById('hotel-checkin').value;
-    const checkout = document.getElementById('hotel-checkout').value;
-
-    handleFormSubmission(
-        'hotel-booking-form',
-        '/api/book-hotel',
-        'hotel-response',
-        { name: hotelName, checkinDate: checkin, checkoutDate: checkout }
-    );
-});
-
-// Flight Booking Submission
-document.getElementById('flight-booking-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const flightNumber = document.getElementById('flight-number').value;
-    const destination = document.getElementById('flight-destination').value;
-    const travelDate = document.getElementById('flight-date').value;
-
-    handleFormSubmission(
-        'flight-booking-form',
-        '/api/book-flight',
-        'flight-response',
-        { flightNumber, destination, travelDate }
-    );
-});
-
-// Car Booking Submission
-document.getElementById('car-booking-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const carModel = document.getElementById('car-model').value;
-    const rentalDays = document.getElementById('car-rental-days').value;
-
-    handleFormSubmission(
-        'car-booking-form',
-        '/api/book-car',
-        'car-response',
-        { carModel, rentalDays }
-    );
-});
