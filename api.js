@@ -1,11 +1,9 @@
 const express = require('express');
-const { bookHotel } = require('../controllers/bookingController');
+const { getDestinationInsights } = require('../controllers/destinationController');
 
 const router = express.Router();
 
-// API Routes
-router.post('/book-hotel', bookHotel);
-
-// Add more routes as needed
+// AI-generated destination insights route
+router.post('/get-destination-insights', getDestinationInsights);
 
 module.exports = router;
